@@ -6,12 +6,12 @@ No close method is provided.
 Installation and configuration
 ==============================
 
-#. Crete luksctl_api user
+1. Crete luksctl_api user
 ```
 # useradd luksctl_api
 ```
 
-#. Clone and install luksctl package
+2. Clone and install luksctl package
 
 ```
 # sudo -i -u luksctl_api
@@ -23,4 +23,12 @@ $ cd lukctl
 $ pip install .
 ```
 
-#. 
+3. Clone and install luksctl_api repository
+
+```
+# sudo -i -u luksctl_api
+
+$ git clone https://github.com/Laniakea-elixir-it/luksctl_api.git
+```
+
+4. Install and enable systemd unit file 
