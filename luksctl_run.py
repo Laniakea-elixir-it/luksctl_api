@@ -39,8 +39,7 @@ def which(name):
 #______________________________________
 def status():
 
-
-  command = which('sudo') + ' -E -u luksctl_api sudo ' + which('luksctl') + ' status'
+  command = which('sudo') + ' ' + which('luksctl') + ' status'
 
   status, stdout, stderr = exec_cmd(command)
 
@@ -59,7 +58,7 @@ def status():
 #______________________________________
 def open(vault_url, vault_token, secret_root, secret_path, secret_key):
 
-  status_command = which('sudo') + ' -E -u luksctl_api sudo ' + which('luksctl') + ' status'
+  status_command = which('sudo') + ' ' + which('luksctl') + ' status'
 
   current_stat, current_stodut, current_stderr = exec_cmd(status_command)
 
