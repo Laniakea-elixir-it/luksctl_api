@@ -6,12 +6,12 @@ import luksctl_run
 
 app = Flask(__name__)
 
-@app.route('/api/v1.0/status', methods=['GET'])
+@app.route('/luksctl_api/v1.0/status', methods=['GET'])
 def get_status():
 
     return luksctl_run.status()
 
-@app.route('/api/v1.0/open', methods=['POST'])
+@app.route('/luksctl_api/v1.0/open', methods=['POST'])
 def lusopen():
 
     if not request.json or \
