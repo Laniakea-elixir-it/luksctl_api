@@ -36,34 +36,39 @@ def which(name):
       return str(full_path)
 
 #______________________________________
-def status():
+def check_status(nfs_mount_list):
 
-  command = which('sudo') + ' ' + which('ls') + ' /home/galaxy/galaxy'
+  for mountpoint in nfs_mount_list:
+    logging.debug(mountpoint + ': ' + str(os.path.ismount(mountpoint)))
+    if not os.path.ismount(mountpoint):
+      return False
 
-  status, stdout, stderr = exec_cmd(command)
+  return True
 
-  logging.debug( 'Volume status stdout: ' + str(stdout) )
-  logging.debug( 'Volume status stderr: ' + str(stderr) )
-  logging.debug( 'Volume status: ' + str(status) )
+#______________________________________
+def get_status(nfs_mount_list):
 
-  logging.debug(os.path.isdir('/home/galaxy/galaxy'))
+  logging.debug(nfs_mount_list)
 
-  if os.path.exists('/home/galaxy/galaxy'):
+  if check_status(nfs_mount_list):
     return jsonify({'nfs_state': 'mounted' })
   else:
     return jsonify({'nfs_state': 'unmounted'})
 
 #______________________________________
-def nfs_restart():
+def nfs_mount(nfs_mount_list):
 
-  command = which('sudo') + ' ' + which('systemctl') + ' restart nfs-server'
+  if check_status(nfs_mount_list):
+    return jsonify({'nfs_state': 'mounted' })
 
-  print os.name
+  command = which('sudo') + ' ' + which('mount') + ' -a -t nfs'
+
+  logging.debug(command)
 
   status, stdout, stderr = exec_cmd(command)
 
-  logging.debug( 'Volume status stdout: ' + str(stdout) )
-  logging.debug( 'Volume status stderr: ' + str(stderr) )
-  logging.debug( 'Volume status: ' + str(status) )
+  logging.debug( 'NFS mount subprocess call status: ' + str(status) )
+  logging.debug( 'NFS mount subprocess call stdout: ' + str(stdout) )
+  logging.debug( 'NFS mount subprocess call stderr: ' + str(stderr) )
 
-  return status()
+  return get_status(nfs_mount_list)
