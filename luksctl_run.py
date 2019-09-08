@@ -6,7 +6,7 @@
 from flask import Flask, jsonify, request
 import subprocess
 import json, requests
-import os, sys
+import os, sys, platform
 from os.path import exists, pathsep
 from string import split
 
@@ -56,7 +56,7 @@ def status():
 
 
 #______________________________________
-def open(vault_url, vault_token, secret_root, secret_path, secret_key):
+def open(vault_url, vault_token, secret_root, secret_path, secret_key, infra_config, node_list=None):
 
   status_command = which('sudo') + ' ' + which('luksctl') + ' status'
 
@@ -80,12 +80,53 @@ def open(vault_url, vault_token, secret_root, secret_path, secret_key):
     logging.debug( 'Volume status stderr: ' + str(stderr) )
     logging.debug( 'Volume status: ' + str(status) )
 
+    if str(status) == '0' and infra_config == 'cluster':
+        nfs_restart(node_list)
+
     if str(status) == '0':
       return jsonify({'volume_state': 'mounted' })
     elif str(status)  == '1':
       return jsonify({'volume_state': 'unmounted' })
     else:
       return jsonify({'volume_state': 'unavailable', 'output': stdout, 'stderr': stderr })
+
+
+#______________________________________
+def nfs_restart(node_list):
+
+    command = '' 
+    platform_info = platform.dist()
+
+    logging.debug('Restarting NFS on: ' + str(platform_info))
+
+    if platform_info[0] == 'centos':
+        command = which('sudo') + ' ' + which('systemctl') + ' restart nfs-server'
+    elif platform_info[0] == 'ubuntu':
+        command = which('sudo') + ' ' + which('systemctl') + ' restart nfs-kernel-server'
+
+    status, stdout, stderr = exec_cmd(command)
+
+    logging.debug( 'NFS status: ' + str(status) )
+    logging.debug( 'NFS status stdout: ' + str(stdout) )
+    logging.debug( 'NFS status stderr: ' + str(stderr) )
+
+    if str(status) == '0':
+        mount_nfs_on_wns(node_list)
+
+
+#______________________________________
+def mount_nfs_on_wns(node_list):
+
+  for node in node_list:
+      url = 'http://' + node + '/luksctl_api_wn/v1.0/nfs-restart'
+
+      response = requests.post(url, verify=False)
+
+      response.raise_for_status()
+
+      deserialized_response = json.loads(response.text)
+
+      logging.debug(mountpoint + 'NFS: ' + deserialized_response['nfs_state'])
 
 
 #______________________________________

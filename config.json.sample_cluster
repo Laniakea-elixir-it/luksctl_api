@@ -1,0 +1,4 @@
+{
+  "INFRASTRUCTURE_CONFIGURATION": "cluster",
+  "WN_IPS": ["172.30.66.33"]
+}
