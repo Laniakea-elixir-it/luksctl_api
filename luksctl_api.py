@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 import subprocess
+import os.path
 
 import luksctl_run
 
@@ -8,7 +9,11 @@ import logging
 logging.basicConfig(filename='/tmp/luksctl-api.log', format='%(levelname)s %(asctime)s %(message)s', level='DEBUG')
 
 app = Flask(__name__)
-app.config.from_json('config.json')
+if os.path.exists('config.json'):
+    app.config.from_json('config.json')
+else:
+    app.config.from_json('config.json.sample')
+
 infra_config = app.config.get('INFRASTRUCTURE_CONFIGURATION')
 logging.debug(infra_config)
 
