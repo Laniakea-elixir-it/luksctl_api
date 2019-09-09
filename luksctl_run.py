@@ -118,7 +118,7 @@ def nfs_restart(node_list):
 def mount_nfs_on_wns(node_list):
 
   for node in node_list:
-      url = 'http://' + node + '/luksctl_api_wn/v1.0/nfs-mount'
+      url = 'http://' + node + ':5000/luksctl_api_wn/v1.0/nfs-mount'
 
       response = requests.post(url, verify=False)
 
