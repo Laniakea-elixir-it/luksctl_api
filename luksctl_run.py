@@ -126,7 +126,7 @@ def mount_nfs_on_wns(node_list):
 
       deserialized_response = json.loads(response.text)
 
-      logging.debug(mountpoint + 'NFS: ' + deserialized_response['nfs_state'])
+      logging.debug(node + 'NFS: ' + deserialized_response['nfs_state'])
 
 
 #______________________________________
