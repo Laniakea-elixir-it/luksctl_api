@@ -15,7 +15,7 @@ else:
     app.config.from_json('config.json.sample')
 
 infra_config = app.config.get('INFRASTRUCTURE_CONFIGURATION')
-logging.debug(infra_config)
+virtualization_type = app.config.get('VIRTUALIZATION_TYPE')
 
 @app.route('/luksctl_api/v1.0/status', methods=['GET'])
 def get_status():
@@ -44,4 +44,5 @@ def luksopen():
                             request.json['secret_path'],
                             request.json['secret_key'],
                             infra_config,
+                            virtualization_type,
                             node_list)

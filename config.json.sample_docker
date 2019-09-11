@@ -1,0 +1,4 @@
+{
+  "INFRASTRUCTURE_CONFIGURATION": "single_vm",
+  "VIRTUALIZATION_TYPE": "docker"
+}

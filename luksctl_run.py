@@ -56,7 +56,7 @@ def status():
 
 
 #______________________________________
-def open(vault_url, vault_token, secret_root, secret_path, secret_key, infra_config, node_list=None):
+def open(vault_url, vault_token, secret_root, secret_path, secret_key, infra_config, virtualization_type='vm', node_list=None):
 
   status_command = which('sudo') + ' ' + which('luksctl') + ' status'
 
@@ -82,6 +82,9 @@ def open(vault_url, vault_token, secret_root, secret_path, secret_key, infra_con
 
     if str(status) == '0' and infra_config == 'cluster':
         nfs_restart(node_list)
+
+    if str(status) == '0' and virtualization_type == 'docker':
+        docker_restart()
 
     if str(status) == '0':
       return jsonify({'volume_state': 'mounted' })
@@ -127,6 +130,18 @@ def mount_nfs_on_wns(node_list):
       deserialized_response = json.loads(response.text)
 
       logging.debug(node + 'NFS: ' + deserialized_response['nfs_state'])
+
+
+#______________________________________
+def docker_restart():
+
+    command = which('sudo') + ' ' + which('systemctl') + ' restart docker'
+
+    status, stdout, stderr = exec_cmd(command)
+
+    logging.debug( 'Docker service status: ' + str(status) )
+    logging.debug( 'Docker service stdout: ' + str(stdout) )
+    logging.debug( 'Docker service stderr: ' + str(stderr) )
 
 
 #______________________________________
