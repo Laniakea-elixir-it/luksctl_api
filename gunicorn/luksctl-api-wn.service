@@ -1,0 +1,16 @@
+# Copy this file to /etc/systemd/system/luksctl-api.service
+# and adjust it following your configuration path
+
+[Unit]
+Description=Gunicorn instance to serve luksctl api server
+After=network.target
+
+[Service]
+User=luksctl_api_wn
+Group=luksctl_api_wn
+WorkingDirectory=/opt/luksctl_api/wn
+Environment="PATH=/opt/luksctl_api/wn/venv/bin"
+ExecStart=/opt/luksctl_api/wn/venv/bin/gunicorn --workers 2 --bind 0.0.0.0:5000 -m 007 app:app
+
+[Install]
+WantedBy=multi-user.target
