@@ -3,6 +3,8 @@
 An API to check the status of luks volumes and open it if needed.
 No close method is provided.
 
+https://laniakea.readthedocs.io/en/latest/admin_documentation/encryption/luksctl_api.html
+
 Installation and configuration
 ==============================
 
