@@ -39,7 +39,7 @@ def which(name):
 #______________________________________
 def status():
 
-  command = which('sudo') + ' ' + which('luksctl') + ' status'
+  command = which('sudo') + ' ' + which('luksctl') + ' luks-volume status'
 
   status, stdout, stderr = exec_cmd(command)
 
@@ -58,7 +58,7 @@ def status():
 #______________________________________
 def open(vault_url, vault_token, secret_root, secret_path, secret_key, infra_config, virtualization_type='vm', node_list=None):
 
-  status_command = which('sudo') + ' ' + which('luksctl') + ' status'
+  status_command = which('sudo') + ' ' + which('luksctl') + ' luks-volume status'
 
   current_stat, current_stodut, current_stderr = exec_cmd(status_command)
 
@@ -72,7 +72,7 @@ def open(vault_url, vault_token, secret_root, secret_path, secret_key, infra_con
     secret = read_secret( vault_url, secret_root, secret_path, read_token, secret_key)
 
     # open volume
-    command = 'printf "'+secret+'\n" | ' + which('sudo') + ' ' + which('luksctl') + ' open'
+    command = 'printf "'+secret+'\n" | ' + which('sudo') + ' ' + which('luksctl') + ' luks-volume open'
 
     status, stdout, stderr = exec_cmd(command)
 
